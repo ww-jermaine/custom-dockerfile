@@ -10,7 +10,11 @@ COPY source-repo /workspace/source-repo
 RUN pip install pytest
 
 # Merge: copy solution code into test directory
-RUN cp -r source-repo/src/* test-repo/ 2>/dev/null || true
+RUN if [ -d "source-repo/src" ] && [ "$(ls -A source-repo/src)" ]; then \
+      cp -r source-repo/src/* test-repo/; \
+    else \
+      echo "Warning: source-repo/src not found or empty"; \
+    fi
 
 WORKDIR /workspace/test-repo
 
